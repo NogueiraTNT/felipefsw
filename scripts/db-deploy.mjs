@@ -14,5 +14,7 @@ const migrate = run("npx", ["prisma", "migrate", "deploy"]);
 if (migrate.status === 0) process.exit(0);
 
 console.warn("[db-deploy] migrate deploy falhou; tentando prisma db push…");
-const push = run("npx", ["prisma", "db", "push", "--skip-generate"]);
+const args = ["prisma", "db", "push", "--skip-generate"];
+if (process.env.FORCE_DB_PUSH === "1") args.push("--accept-data-loss");
+const push = run("npx", args);
 process.exit(push.status ?? 1);
